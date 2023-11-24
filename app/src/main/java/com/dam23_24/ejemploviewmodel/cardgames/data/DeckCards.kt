@@ -5,13 +5,12 @@ package com.dam23_24.ejemploviewmodel.cardgames.data
 import android.content.Context
 import com.dam23_24.ejemploviewmodel.R
 
-class Baraja {
+class DeckCards {
 
     companion object {
-        private val listaCartas: ArrayList<Carta> = ArrayList()
+        private val listaCartas: ArrayList<Card> = ArrayList()
 
-        fun crearBaraja(context: Context) {
-
+        fun newDeckOfCards(context: Context) {
             listaCartas.clear()
             var puntosMin: Int
             var puntosMax: Int
@@ -34,14 +33,14 @@ class Baraja {
                     }
 
                     listaCartas.add(
-                        Carta(
-                            Naipes.values()[cont],
-                            Palos.values()[palo],
+                        Card(
+                            CardsName.values()[cont],
+                            Suits.values()[palo],
                             puntosMin,
                             puntosMax,
-                            loadImage(
+                            getIdDrawable(
                                 context,
-                                "${Palos.values()[palo].toString().lowercase()}_${cont}"
+                                "${Suits.values()[palo].toString().lowercase()}_${cont}"
                             )
                         )
                     )
@@ -49,25 +48,25 @@ class Baraja {
             }
         }
 
-        fun barajar() {
+        fun shuffle() {
             listaCartas.shuffle()
         }
 
-        fun dameCarta(): Carta {
+        fun getCard(): Card {
             val carta = listaCartas.last()
             listaCartas.removeLast()
             return carta
         }
 
-        fun dameCartaBocaAbajo(): Carta {
-            return(Carta(Naipes.NINGUNA, Palos.NINGUNA, 0, 0, R.drawable.carta))
+        fun getFaceDownCard(): Card {
+            return(Card(CardsName.NINGUNA, Suits.NINGUNA, 0, 0, R.drawable.carta))
         }
 
-        fun totalCartas(): Int {
+        fun getCardsTotal(): Int {
             return listaCartas.size
         }
 
-        private fun loadImage(context: Context, nombreCarta: String) =
+        private fun getIdDrawable(context: Context, nombreCarta: String) =
             context.resources.getIdentifier(
                     nombreCarta,
                     "drawable",

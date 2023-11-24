@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dam23_24.ejemploviewmodel.cardgames.data.Baraja
 import com.dam23_24.ejemploviewmodel.cardgames.data.Routes.*
 import com.dam23_24.ejemploviewmodel.cardgames.ui.BlackJackViewModel
 import com.dam23_24.ejemploviewmodel.cardgames.ui.CardGamesViewModel
@@ -39,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val context = LocalContext.current
 
-                    highestCardViewModel.reiniciar(context)
+                    highestCardViewModel.restart(context)
 
                     val navController = rememberNavController()
 

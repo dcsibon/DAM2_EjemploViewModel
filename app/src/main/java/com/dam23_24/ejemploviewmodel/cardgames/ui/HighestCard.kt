@@ -28,8 +28,8 @@ fun HighestCardScreen(
     navController: NavHostController,
     highestCardViewModel: HighestCardViewModel
 ) {
-    val imagenId: Int by highestCardViewModel.imagenId.observeAsState(initial = 0)
-    val descImagen: String by highestCardViewModel.descImagen.observeAsState(initial = "")
+    val imagenId: Int by highestCardViewModel.imageId.observeAsState(initial = 0)
+    val descImagen: String by highestCardViewModel.imageDesc.observeAsState(initial = "")
     /*
     var imagenId by rememberSaveable { mutableIntStateOf(R.drawable.carta) }
     var descImagen by rememberSaveable { mutableStateOf("") }
@@ -40,10 +40,10 @@ fun HighestCardScreen(
         imagenId = imagenId,
         descImagen = descImagen,
         onClickDameCarta = {
-            highestCardViewModel.dameCarta()
+            highestCardViewModel.getCard()
         },
         onClickReiniciar = {
-            highestCardViewModel.reiniciar(context)
+            highestCardViewModel.restart(context)
         },
         highestCardViewModel
     )
@@ -71,7 +71,7 @@ fun HighestCardLayout(
                 .padding(horizontal = 40.dp)
         ) {
             Text(
-                text = "Cartas en la baraja: ${highestCardViewModel.totalCartas()}",
+                text = "Cartas en la baraja: ${highestCardViewModel.getCardsTotal()}",
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -103,7 +103,7 @@ fun HighestCardLayout(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                enabled = highestCardViewModel.botonDameCartaHabilitado(),
+                enabled = highestCardViewModel.btnGetCardEnabled(),
                 onClick = { onClickDameCarta() }
             ) {
                 Text(text = "Dame Carta")

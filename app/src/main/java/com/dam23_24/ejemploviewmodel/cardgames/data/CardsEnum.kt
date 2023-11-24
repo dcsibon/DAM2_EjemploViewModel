@@ -2,7 +2,7 @@
 
 package com.dam23_24.ejemploviewmodel.cardgames.data
 
-enum class Palos(val orden: Int) {
+enum class Suits(val orden: Int) {
     NINGUNA(0),
     CORAZONES(1),
     DIAMANTES(2),
@@ -10,7 +10,7 @@ enum class Palos(val orden: Int) {
     PICAS(4)
 }
 
-enum class Naipes(val orden: Int) {
+enum class CardsName(val orden: Int) {
     NINGUNA(0),
     AS(1),
     DOS(2),
