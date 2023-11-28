@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dam23_24.ejemploviewmodel.cardgames.data.Player
 import com.dam23_24.ejemploviewmodel.cardgames.data.Routes.*
 import com.dam23_24.ejemploviewmodel.cardgames.ui.BlackJackViewModel
 import com.dam23_24.ejemploviewmodel.cardgames.ui.CardGamesViewModel
@@ -37,7 +38,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val context = LocalContext.current
-
                     highestCardViewModel.restart(context)
 
                     val navController = rememberNavController()
@@ -54,11 +54,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(HighestCardScreen.route) {
                             HighestCardScreen(
-                                navController = navController,
                                 highestCardViewModel = highestCardViewModel
                             )
                         }
                         composable(BlackJackScreen.route) {
+                            blackJackViewModel.newDeckOfCards(context)
                             BlackJackScreen(
                                 navController = navController,
                                 blackJackViewModel = blackJackViewModel
