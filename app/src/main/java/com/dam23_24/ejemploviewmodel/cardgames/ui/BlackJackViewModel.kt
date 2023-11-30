@@ -21,25 +21,28 @@ import java.util.ArrayList
  * @property showConfigPlayersDialog Public LiveData Boolean to observe the state of _showConfigPlayersDialog.
  * @property _showFinishGameDialog Private LiveData Boolean to show the game finish dialog.
  * @property showFinishGameDialog Public LiveData Boolean to observe the state of _showFinishGameDialog.
+ * @property _showBtnAccept Private LiveData Boolean to enable/disable the accept button in player configuration.
+ * @property showBtnAccept Public LiveData Boolean to observe the state of _showBtnAccept.
+ * @property _player1 Private LiveData Player to store information about player 1.
+ * @property _player2 Public LiveData Player to store information about player 2.
  * @property _playerShift Private LiveData Integer to track the player's turn.
  * @property playerShift Public LiveData Integer to observe the player's turn.
  * @property _nickNamePlayer1 Private LiveData String to store the nickname of player 1.
  * @property nickNamePlayer1 Public LiveData String to observe the nickname of player 1.
  * @property _nickNamePlayer2 Private LiveData String to store the nickname of player 2.
  * @property nickNamePlayer2 Public LiveData String to observe the nickname of player 2.
- * @property _showBtnAccept Private LiveData Boolean to enable/disable the accept button in player configuration.
- * @property showBtnAccept Public LiveData Boolean to observe the state of _showBtnAccept.
  * @property _standPlayer1 Private LiveData Boolean to track the stand state of player 1.
  * @property standPlayer1 Public LiveData Boolean to observe the state of _standPlayer1.
  * @property _standPlayer2 Private LiveData Boolean to track the stand state of player 2.
  * @property standPlayer2 Public LiveData Boolean to observe the state of _standPlayer2.
  * @property _refreshPlayerCards Private LiveData Boolean to force the update of player cards in BlackJack Screen.
  * @property refreshPlayerCards Public LiveData Boolean to observe the state of _refreshPlayerCards.
- * @property _player1 Private LiveData Player to store information about player 1.
- * @property _player2 Public LiveData Player to store information about player 2.
+ *
+ * @param application The application context used to initialize the ViewModel.
  */
-//class BlackJackViewModel : ViewModel() {
 class BlackJackViewModel(application: Application) : AndroidViewModel(application) {
+// If we don't need to use the context inside, it's better to inherit from ViewModel
+//class HighestCardViewModel : ViewModel() {
 
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
@@ -50,6 +53,12 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     private val _showFinishGameDialog = MutableLiveData<Boolean>()
     val showFinishGameDialog: LiveData<Boolean> = _showFinishGameDialog
 
+    private val _showBtnAccept = MutableLiveData<Boolean>()
+    val showBtnAccept: LiveData<Boolean> = _showBtnAccept
+
+    private val _player1 = MutableLiveData<Player>()
+    private val _player2 = MutableLiveData<Player>()
+
     private val _playerShift = MutableLiveData<Int>()
     val playerShift: LiveData<Int> = _playerShift
 
@@ -58,9 +67,6 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val _nickNamePlayer2 = MutableLiveData<String>()
     val nickNamePlayer2: LiveData<String> = _nickNamePlayer2
-
-    private val _showBtnAccept = MutableLiveData<Boolean>()
-    val showBtnAccept: LiveData<Boolean> = _showBtnAccept
 
     private val _standPlayer1 = MutableLiveData<Boolean>()
     val standPlayer1: LiveData<Boolean> = _standPlayer1
@@ -71,14 +77,9 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     private val _refreshPlayerCards = MutableLiveData<Boolean>()
     val refreshPlayerCards: LiveData<Boolean> = _refreshPlayerCards
 
-    private val _player1 = MutableLiveData<Player>()
-
-    private val _player2 = MutableLiveData<Player>()
-
     init {
         newDeckOfCards()
     }
-
 
     /**
      * Initializes a new deck of cards for the game.
@@ -123,8 +124,9 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
      *
      * @param playerId The ID of the player making the decision (1 or 2).
      * @param stand If true, the player stands; if false, the player does not stand.
+     * @param changePlayer If true, run updateShift() to change user turn.
      */
-    fun playerStand(playerId: Int, stand: Boolean, updateShift: Boolean = false) {
+    fun playerStand(playerId: Int, stand: Boolean, changePlayer: Boolean = false) {
         if (playerId == 1) {
             _standPlayer1.value = stand
         } else {
@@ -134,14 +136,13 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
         //Verify if game has finished...
         _showFinishGameDialog.value = (_standPlayer1.value == true && _standPlayer2.value == true)
 
-        //forceRefreshPlayersCards()
-        if (updateShift) {
+        if (changePlayer) {
             updateShift()
         }
     }
 
     /**
-     * Changes the turn to the next player.
+     * Changes player turn.
      */
     private fun updateShift() {
         if (_playerShift.value == 1) {
@@ -153,7 +154,8 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     /**
-     * Forces the update of player cards.
+     * Forces the update of player cards in the View.
+     * (trick to force recomposing component LazyRow in BlackJack.kt)
      */
     private fun forceRefreshPlayersCards() {
         if (_refreshPlayerCards.value == null) {
@@ -164,7 +166,7 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     /**
-     * Initiates a new game by creating new players and dealing initial cards.
+     * Initiates a new game by creating new players and resetting info.
      */
     fun newGame() {
         _player1.value = Player(_nickNamePlayer1.value!!, ArrayList(), points = 0)
@@ -172,6 +174,12 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
         resetGame()
     }
 
+    /**
+     * Reset deck of cards and player's info to start a new game
+     *
+     * @param resetPlayers Boolean indicating if reset info players is necessary
+     * (default value is false)
+     */
     fun resetGame(resetPlayers: Boolean = false) {
         if (resetPlayers) {
             _player1.value!!.cardsList.clear()
@@ -235,18 +243,14 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
      *
      * @param playerId The ID of the player (1 or 2) requesting a new card.
      */
-    fun requestNewCard(playerId : Int) {
-        if (_playerShift.value == 1) {
-            _player1.value!!.cardsList.add(DeckCards.getCard())
-            calcPoints(_player1.value!!)
-            //Automatic stand if player 1 has more than 21 points
-            playerStand(playerId, _player1.value!!.points > 21)
-        } else {
-            _player2.value!!.cardsList.add(DeckCards.getCard())
-            calcPoints(_player2.value!!)
-            //Automatic stand if player 1 has more than 21 points
-            playerStand(playerId, _player2.value!!.points > 21)
-        }
+    fun requestNewCard(playerId: Int) {
+        val player = if (playerId == 1) _player1.value!! else _player2.value!!
+
+        player.cardsList.add(DeckCards.getCard())
+        calcPoints(player)
+
+        //Automatic stand if points of player 1 is >= 21 points
+        playerStand(playerId, player.points >= 21)
 
         //Verify if game has finished...
         _showFinishGameDialog.value = (_standPlayer1.value == true && _standPlayer2.value == true)

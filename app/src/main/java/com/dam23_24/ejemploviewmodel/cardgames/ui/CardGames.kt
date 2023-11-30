@@ -13,6 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.dam23_24.ejemploviewmodel.cardgames.data.Routes.*
 
+/**
+ * Composable function representing the main screen for selecting card games.
+ *
+ * @param navController The navigation controller used for navigating to different screens.
+ */
 @Composable
 fun CardGamesScreen(
     navController: NavHostController
@@ -24,6 +29,7 @@ fun CardGamesScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
+        // Button to navigate to the Highest Card game screen
         Button(
             modifier = Modifier.padding(bottom = 50.dp),
             onClick = { navController.navigate(HighestCardScreen.route) }
@@ -31,6 +37,7 @@ fun CardGamesScreen(
             Text(text = "Carta más alta")
         }
 
+        // Button to navigate to the BlackJack game screen
         Button(
             onClick = { navController.navigate(BlackJackScreen.route) }
         ) {

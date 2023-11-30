@@ -39,6 +39,12 @@ import com.dam23_24.ejemploviewmodel.cardgames.data.Routes
 import com.dam23_24.ejemploviewmodel.R
 import com.dam23_24.ejemploviewmodel.cardgames.data.Card
 
+/**
+ * Composable function representing the main screen for the Blackjack game.
+ *
+ * @param navController The navigation controller used for navigating to different screens.
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ */
 @Composable
 fun BlackJackScreen(
     navController: NavHostController,
@@ -67,6 +73,13 @@ fun BlackJackScreen(
     )
 }
 
+/**
+ * Composable function representing the layout of the Blackjack game.
+ *
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ * @param showConfigPlayersDialog Flag indicating whether the configuration dialog is visible.
+ * @param refreshPlayerCards Flag indicating whether player cards should be refreshed.
+ */
 @Suppress("UNUSED_PARAMETER")
 @Composable
 fun BlackJackLayout(
@@ -139,6 +152,11 @@ fun BlackJackLayout(
     }
 }
 
+/**
+ * Composable function representing an item (card) in the player's hand.
+ *
+ * @param card The card object to be displayed.
+ */
 @Composable
 fun ItemCardPlayer(card: Card) {
     Image(
@@ -150,6 +168,13 @@ fun ItemCardPlayer(card: Card) {
     )
 }
 
+/**
+ * Composable function representing the UI for Player 1 in the Blackjack game.
+ *
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ * @param standPlayer1 Flag indicating whether Player 1 has chosen to stand.
+ * @param playerShift The current player's turn.
+ */
 @Composable
 fun Player1(
     blackJackViewModel: BlackJackViewModel,
@@ -171,7 +196,7 @@ fun Player1(
         Button(
             enabled = !standPlayer1 && (playerShift == 1),
             onClick = {
-                blackJackViewModel.playerStand(1, stand = true, updateShift = true)
+                blackJackViewModel.playerStand(1, stand = true, changePlayer = true)
             }
         ) {
             Text(
@@ -186,6 +211,13 @@ fun Player1(
     )
 }
 
+/**
+ * Composable function representing the UI for Player 2 in the Blackjack game.
+ *
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ * @param standPlayer2 Flag indicating whether Player 2 has chosen to stand.
+ * @param playerShift The current player's turn.
+ */
 @Composable
 fun Player2(
     blackJackViewModel: BlackJackViewModel,
@@ -211,7 +243,7 @@ fun Player2(
         Button(
             enabled = !standPlayer2 && (playerShift == 2),
             onClick = {
-                blackJackViewModel.playerStand(2, stand = true, updateShift = true)
+                blackJackViewModel.playerStand(2, stand = true, changePlayer = true)
             }
         ) {
             Text(
@@ -221,6 +253,14 @@ fun Player2(
     }
 }
 
+/**
+ * Composable function representing the configuration dialog for setting player nicknames.
+ *
+ * @param navController The navigation controller used for navigating to different screens.
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ * @param showConfigPlayersDialog Flag indicating whether the configuration dialog is visible.
+ * @param onDissmiss Callback function for dismissing the dialog.
+ */
 @Composable
 fun ConfigPlayersDialog(
     navController: NavHostController,
@@ -261,6 +301,11 @@ fun ConfigPlayersDialog(
     }
 }
 
+/**
+ * Composable function representing the title of a dialog.
+ *
+ * @param text The text to be displayed as the title.
+ */
 @Composable
 fun TitleDialog(text: String) {
     Column(
@@ -277,6 +322,14 @@ fun TitleDialog(text: String) {
     }
 }
 
+/**
+ * Composable function representing an item for entering a player's nickname.
+ *
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ * @param playerId The ID of the player (1 or 2).
+ * @param drawable The resource ID of the player's avatar.
+ * @param nickNamePlayer The current nickname of the player.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NickNameItem(
@@ -326,6 +379,12 @@ fun NickNameItem(
     }
 }
 
+/**
+ * Composable function representing buttons for accepting or canceling player configuration.
+ *
+ * @param navController The navigation controller used for navigating to different screens.
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ */
 @Composable
 fun Buttons(
     navController: NavHostController,
@@ -357,6 +416,13 @@ fun Buttons(
     }
 }
 
+/**
+ * Composable function representing the dialog shown at the end of a Blackjack game.
+ *
+ * @param navController The navigation controller used for navigating to different screens.
+ * @param blackJackViewModel The ViewModel responsible for managing the Blackjack game logic.
+ * @param showFinishGameDialog Flag indicating whether the finish game dialog is visible.
+ */
 @Composable
 fun FinishGameDialog(
     navController: NavHostController,

@@ -22,7 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.activity.compose.BackHandler
 import androidx.navigation.NavHostController
 
-
+/**
+ * Composable function representing the screen for the Highest Card game.
+ *
+ * @param navController The navigation controller used for navigating to different screens.
+ * @param highestCardViewModel The ViewModel responsible for managing the Highest Card game logic.
+ */
 @Composable
 fun HighestCardScreen(
     navController: NavHostController,
@@ -39,10 +44,10 @@ fun HighestCardScreen(
     HighestCardLayout(
         imagenId = imagenId,
         descImagen = descImagen,
-        onClickDameCarta = {
+        onClickRequestCard = {
             highestCardViewModel.getCard()
         },
-        onClickReiniciar = {
+        onClickReset = {
             highestCardViewModel.restart()
         },
         highestCardViewModel
@@ -50,12 +55,21 @@ fun HighestCardScreen(
 
 }
 
+/**
+ * Composable function representing the layout of the Highest Card game.
+ *
+ * @param imagenId The resource ID of the card image to be displayed.
+ * @param descImagen The description of the card image.
+ * @param onClickRequestCard Callback for the "Dame Carta" button click.
+ * @param onClickReset Callback for the "Reiniciar" button click.
+ * @param highestCardViewModel The ViewModel responsible for managing the Highest Card game logic.
+ */
 @Composable
 fun HighestCardLayout(
     imagenId: Int,
     descImagen: String,
-    onClickDameCarta: () -> Unit,
-    onClickReiniciar: () -> Unit,
+    onClickRequestCard: () -> Unit,
+    onClickReset: () -> Unit,
     highestCardViewModel: HighestCardViewModel
 ) {
     Column(
@@ -70,12 +84,14 @@ fun HighestCardLayout(
                 .fillMaxSize()
                 .padding(horizontal = 40.dp)
         ) {
+            // Display the number of cards remaining in the deck
             Text(
                 text = "Cartas en la baraja: ${highestCardViewModel.getCardsTotal()}",
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             )
+            // Display the card image
             Box(
                 modifier = Modifier
                     .weight(4f)
@@ -87,6 +103,7 @@ fun HighestCardLayout(
                         .fillMaxSize()
                 )
             }
+            // Display the description of the card
             Text(
                 text = descImagen,
                 modifier = Modifier
@@ -94,6 +111,7 @@ fun HighestCardLayout(
                     .padding(top = 20.dp)
             )
         }
+        // Row for action buttons
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -102,15 +120,17 @@ fun HighestCardLayout(
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            // Button to draw a new card
             Button(
                 enabled = highestCardViewModel.btnGetCardEnabled(),
-                onClick = { onClickDameCarta() }
+                onClick = { onClickRequestCard() }
             ) {
                 Text(text = "Dame Carta")
             }
+            // Button to restart the game
             Button(
                 enabled = highestCardViewModel.getCardsTotal() < 52,
-                onClick = { onClickReiniciar() }
+                onClick = { onClickReset() }
             ) {
                 Text(text = "Reiniciar")
             }
