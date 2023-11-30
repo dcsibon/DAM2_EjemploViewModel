@@ -2,11 +2,11 @@
 
 package com.dam23_24.ejemploviewmodel.cardgames.ui
 
-import android.content.Context
-import android.util.Log
+import android.annotation.SuppressLint
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.dam23_24.ejemploviewmodel.cardgames.data.Card
 import com.dam23_24.ejemploviewmodel.cardgames.data.DeckCards
 import com.dam23_24.ejemploviewmodel.cardgames.data.Player
@@ -38,38 +38,59 @@ import java.util.ArrayList
  * @property _player1 Private LiveData Player to store information about player 1.
  * @property _player2 Public LiveData Player to store information about player 2.
  */
-class BlackJackViewModel : ViewModel() {
+//class BlackJackViewModel : ViewModel() {
+class BlackJackViewModel(application: Application) : AndroidViewModel(application) {
+
+    @SuppressLint("StaticFieldLeak")
+    private val context = getApplication<Application>().applicationContext
 
     private val _showConfigPlayersDialog = MutableLiveData<Boolean>()
-    val showConfigPlayersDialog : LiveData<Boolean> = _showConfigPlayersDialog
+    val showConfigPlayersDialog: LiveData<Boolean> = _showConfigPlayersDialog
 
     private val _showFinishGameDialog = MutableLiveData<Boolean>()
-    val showFinishGameDialog : LiveData<Boolean> = _showFinishGameDialog
+    val showFinishGameDialog: LiveData<Boolean> = _showFinishGameDialog
 
     private val _playerShift = MutableLiveData<Int>()
-    val playerShift : LiveData<Int> = _playerShift
+    val playerShift: LiveData<Int> = _playerShift
 
     private val _nickNamePlayer1 = MutableLiveData<String>()
-    val nickNamePlayer1 : LiveData<String> = _nickNamePlayer1
+    val nickNamePlayer1: LiveData<String> = _nickNamePlayer1
 
     private val _nickNamePlayer2 = MutableLiveData<String>()
-    val nickNamePlayer2 : LiveData<String> = _nickNamePlayer2
+    val nickNamePlayer2: LiveData<String> = _nickNamePlayer2
 
     private val _showBtnAccept = MutableLiveData<Boolean>()
-    val showBtnAccept : LiveData<Boolean> = _showBtnAccept
+    val showBtnAccept: LiveData<Boolean> = _showBtnAccept
 
     private val _standPlayer1 = MutableLiveData<Boolean>()
-    val standPlayer1 : LiveData<Boolean> = _standPlayer1
+    val standPlayer1: LiveData<Boolean> = _standPlayer1
 
     private val _standPlayer2 = MutableLiveData<Boolean>()
-    val standPlayer2 : LiveData<Boolean> = _standPlayer2
+    val standPlayer2: LiveData<Boolean> = _standPlayer2
 
     private val _refreshPlayerCards = MutableLiveData<Boolean>()
-    val refreshPlayerCards : LiveData<Boolean> = _refreshPlayerCards
+    val refreshPlayerCards: LiveData<Boolean> = _refreshPlayerCards
 
     private val _player1 = MutableLiveData<Player>()
+    val player1 : LiveData<Player> = _player1
 
     private val _player2 = MutableLiveData<Player>()
+    val player2 : LiveData<Player> = _player2
+
+    init {
+        newDeckOfCards()
+        _player1.value = Player("", ArrayList(), 0, false)
+        _player2.value = Player("", ArrayList(), 0, false)
+    }
+
+
+    /**
+     * Initializes a new deck of cards for the game.
+     */
+    private fun newDeckOfCards() {
+        DeckCards.newDeckOfCards(context)
+        DeckCards.shuffle()
+    }
 
     /**
      * Handles the dismissal of the player configuration dialog.
@@ -83,20 +104,6 @@ class BlackJackViewModel : ViewModel() {
      */
     fun onClickConfigDialogAccept() {
         _showConfigPlayersDialog.value = false
-    }
-
-    /**
-     * Retrieves the Player object based on the provided player ID.
-     *
-     * @param playerId The ID of the player to retrieve (1 or 2).
-     * @return The Player object associated with the specified player ID.
-     */
-    fun getPlayer(playerId: Int) : Player {
-        return if (playerId == 1) {
-            _player1.value!!
-        } else {
-            _player2.value!!
-        }
     }
 
     /**
@@ -169,24 +176,10 @@ class BlackJackViewModel : ViewModel() {
         _standPlayer1.value = false
         _standPlayer2.value = false
         _playerShift.value = 1
-        _refreshPlayerCards.value = false
+        newDeckOfCards()
         requestNewCard(1)
         requestNewCard(2)
-        if (1 == 1){
-
-        }
-    }
-
-    /**
-     * Initializes a new deck of cards for the game.
-     *
-     * @param context The application context.
-     */
-    fun newDeckOfCards(context: Context) {
-        if (DeckCards.getCardsTotal() < 52) {
-            DeckCards.newDeckOfCards(context)
-            DeckCards.shuffle()
-        }
+        //_refreshPlayerCards.value = false
     }
 
     /**
@@ -254,6 +247,7 @@ class BlackJackViewModel : ViewModel() {
         _showFinishGameDialog.value = (_standPlayer1.value == true && _standPlayer2.value == true)
 
         forceRefreshPlayersCards()
+
         if (
             (playerId == 1 && _standPlayer2.value == false) ||
             (playerId == 2 && _standPlayer1.value == false)
@@ -291,15 +285,14 @@ class BlackJackViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Restart properties as new game
+     */
     fun onFinishGameClose(){
-        /*TODO reiniciar para un nuevo juego*/
         _showConfigPlayersDialog.value = true
         _showFinishGameDialog.value = false
         _nickNamePlayer1.value = ""
         _nickNamePlayer2.value = ""
         _showBtnAccept.value = false
-        _standPlayer1.value = false
-        _standPlayer2.value = false
-        _playerShift.value = 1
     }
 }

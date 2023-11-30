@@ -44,23 +44,13 @@ fun BlackJackScreen(
     navController: NavHostController,
     blackJackViewModel: BlackJackViewModel
 ) {
-    val showConfigPlayersDialog: Boolean by blackJackViewModel.showConfigPlayersDialog.observeAsState(
-        initial = true
-    )
-    val showFinishGameDialog: Boolean by blackJackViewModel.showFinishGameDialog.observeAsState(
-        initial = false
-    )
-    val nickNamePlayer1: String by blackJackViewModel.nickNamePlayer1.observeAsState(initial = "")
-    val nickNamePlayer2: String by blackJackViewModel.nickNamePlayer2.observeAsState(initial = "")
+    val showConfigPlayersDialog: Boolean by blackJackViewModel.showConfigPlayersDialog.observeAsState(initial = true)
+    val showFinishGameDialog: Boolean by blackJackViewModel.showFinishGameDialog.observeAsState(initial = false)
     val refreshPlayerCards: Boolean by blackJackViewModel.refreshPlayerCards.observeAsState(initial = false)
-
-    val i = 0
 
     ConfigPlayersDialog(
         navController,
         blackJackViewModel,
-        nickNamePlayer1,
-        nickNamePlayer2,
         showConfigPlayersDialog
     ) { blackJackViewModel.onDismissConfigDialog() }
 
@@ -163,7 +153,7 @@ fun Player1(
     standPlayer1: Boolean,
     playerShift: Int
 ) {
-    Row() {
+    Row {
         Button(
             modifier = Modifier.padding(end = 4.dp),
             enabled = !standPlayer1 && (playerShift == 1),
@@ -203,7 +193,7 @@ fun Player2(
         modifier = Modifier.padding(bottom = 8.dp),
         text = blackJackViewModel.getPlayerDesc(2)
     )
-    Row() {
+    Row {
         Button(
             modifier = Modifier.padding(end = 4.dp),
             enabled = !standPlayer2 && (playerShift == 2),
@@ -232,11 +222,12 @@ fun Player2(
 fun ConfigPlayersDialog(
     navController: NavHostController,
     blackJackViewModel: BlackJackViewModel,
-    nickNamePlayer1: String,
-    nickNamePlayer2: String,
     showConfigPlayersDialog: Boolean,
     onDissmiss: () -> Unit
 ) {
+    val nickNamePlayer1: String by blackJackViewModel.nickNamePlayer1.observeAsState(initial = "")
+    val nickNamePlayer2: String by blackJackViewModel.nickNamePlayer2.observeAsState(initial = "")
+
     if (showConfigPlayersDialog) {
         Dialog(onDismissRequest = { onDissmiss() }) {
             Column(
@@ -291,7 +282,7 @@ fun NickNameItem(
     @DrawableRes drawable: Int,
     nickNamePlayer: String
 ) {
-    Column() {
+    Column {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

@@ -12,10 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dam23_24.ejemploviewmodel.cardgames.data.Player
 import com.dam23_24.ejemploviewmodel.cardgames.data.Routes.*
 import com.dam23_24.ejemploviewmodel.cardgames.ui.BlackJackViewModel
-import com.dam23_24.ejemploviewmodel.cardgames.ui.CardGamesViewModel
 import com.dam23_24.ejemploviewmodel.cardgames.ui.HighestCardViewModel
 import com.dam23_24.ejemploviewmodel.cardgames.ui.CardGamesScreen
 import com.dam23_24.ejemploviewmodel.cardgames.ui.HighestCardScreen
@@ -24,7 +22,6 @@ import com.dam23_24.ejemploviewmodel.ui.theme.EjemploViewModelTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val cardGamesViewModel: CardGamesViewModel by viewModels()
     private val highestCardViewModel: HighestCardViewModel by viewModels()
     private val blackJackViewModel: BlackJackViewModel by viewModels()
 
@@ -37,8 +34,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val context = LocalContext.current
-                    highestCardViewModel.restart(context)
+                    //val context = LocalContext.current
+                    //highestCardViewModel.restart(context)
 
                     val navController = rememberNavController()
 
@@ -48,17 +45,17 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(CardGamesScreen.route) {
                             CardGamesScreen(
-                                navController = navController,
-                                cardGamesViewModel = cardGamesViewModel
+                                navController = navController
                             )
                         }
                         composable(HighestCardScreen.route) {
                             HighestCardScreen(
+                                navController = navController,
                                 highestCardViewModel = highestCardViewModel
                             )
                         }
                         composable(BlackJackScreen.route) {
-                            blackJackViewModel.newDeckOfCards(context)
+                            //blackJackViewModel.newDeckOfCards(context)
                             BlackJackScreen(
                                 navController = navController,
                                 blackJackViewModel = blackJackViewModel

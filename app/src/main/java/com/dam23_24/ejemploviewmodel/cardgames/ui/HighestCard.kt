@@ -17,22 +17,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.activity.compose.BackHandler
+import androidx.navigation.NavHostController
 
 
 @Composable
 fun HighestCardScreen(
+    navController: NavHostController,
     highestCardViewModel: HighestCardViewModel
 ) {
     val imagenId: Int by highestCardViewModel.imageId.observeAsState(initial = 0)
     val descImagen: String by highestCardViewModel.imageDesc.observeAsState(initial = "")
-    /*
-    var imagenId by rememberSaveable { mutableIntStateOf(R.drawable.carta) }
-    var descImagen by rememberSaveable { mutableStateOf("") }
-    */
-    val context = LocalContext.current
+
+    BackHandler {
+        highestCardViewModel.restart()
+        navController.popBackStack()
+    }
 
     HighestCardLayout(
         imagenId = imagenId,
@@ -41,7 +43,7 @@ fun HighestCardScreen(
             highestCardViewModel.getCard()
         },
         onClickReiniciar = {
-            highestCardViewModel.restart(context)
+            highestCardViewModel.restart()
         },
         highestCardViewModel
     )
@@ -106,7 +108,10 @@ fun HighestCardLayout(
             ) {
                 Text(text = "Dame Carta")
             }
-            Button(onClick = { onClickReiniciar() }) {
+            Button(
+                enabled = highestCardViewModel.getCardsTotal() < 52,
+                onClick = { onClickReiniciar() }
+            ) {
                 Text(text = "Reiniciar")
             }
         }

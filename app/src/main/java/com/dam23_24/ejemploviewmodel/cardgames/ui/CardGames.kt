@@ -15,8 +15,7 @@ import com.dam23_24.ejemploviewmodel.cardgames.data.Routes.*
 
 @Composable
 fun CardGamesScreen(
-    navController: NavHostController,
-    cardGamesViewModel: CardGamesViewModel
+    navController: NavHostController
 ) {
 
     Column(
