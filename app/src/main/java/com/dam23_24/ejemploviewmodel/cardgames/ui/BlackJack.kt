@@ -67,6 +67,7 @@ fun BlackJackScreen(
     )
 }
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun BlackJackLayout(
     blackJackViewModel: BlackJackViewModel,
@@ -97,10 +98,11 @@ fun BlackJackLayout(
                 )
             }
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy((-75).dp),
+                verticalAlignment = Alignment.CenterVertically,
+                contentPadding = PaddingValues(20.dp),
                 modifier = Modifier
                     .weight(3f)
-                    .padding(start = 10.dp)
             ) {
                 //Cartas del jugador 1
                 items(blackJackViewModel.getPlayerCards(1)) { card ->
@@ -108,10 +110,11 @@ fun BlackJackLayout(
                 }
             }
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy((-75).dp),
+                verticalAlignment = Alignment.CenterVertically,
+                contentPadding = PaddingValues(20.dp),
                 modifier = Modifier
                     .weight(3f)
-                    .padding(start = 10.dp)
             ) {
                 //Cartas del jugador 2
                 items(blackJackViewModel.getPlayerCards(2)) { card ->
@@ -339,8 +342,8 @@ fun Buttons(
         Button(
             enabled = showBtnAccept,
             onClick = {
-                blackJackViewModel.newPlayers()
-                blackJackViewModel.onClickConfigDialogAccept()
+                blackJackViewModel.newGame()
+                blackJackViewModel.onClickCloseDialog()
             }
         ) {
             Text(text = "Aceptar")
@@ -376,6 +379,15 @@ fun FinishGameDialog(
                 TitleDialog(text = blackJackViewModel.getWinner())
                 Button(
                     modifier = Modifier.padding(top = 16.dp),
+                    onClick = {
+                        blackJackViewModel.resetGame(true)
+                        blackJackViewModel.onClickCloseDialog()
+                    }
+                ) {
+                    Text(text = "Reiniciar")
+                }
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
                     onClick = {
                         navController.navigate(Routes.CardGamesScreen.route)
                         blackJackViewModel.onFinishGameClose()

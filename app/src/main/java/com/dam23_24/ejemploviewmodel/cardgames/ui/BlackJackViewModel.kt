@@ -72,15 +72,11 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     val refreshPlayerCards: LiveData<Boolean> = _refreshPlayerCards
 
     private val _player1 = MutableLiveData<Player>()
-    val player1 : LiveData<Player> = _player1
 
     private val _player2 = MutableLiveData<Player>()
-    val player2 : LiveData<Player> = _player2
 
     init {
         newDeckOfCards()
-        _player1.value = Player("", ArrayList(), 0, false)
-        _player2.value = Player("", ArrayList(), 0, false)
     }
 
 
@@ -100,20 +96,20 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     /**
-     * Handles the click on the "Accept" button in the player configuration dialog.
+     * Handles the click on the buttons that close dialogs.
      */
-    fun onClickConfigDialogAccept() {
+    fun onClickCloseDialog() {
         _showConfigPlayersDialog.value = false
     }
 
     /**
      * Handles changes in the nickname of a player.
      *
-     * @param player The ID of the player whose nickname is changing (1 or 2).
+     * @param playerId The ID of the player whose nickname is changing (1 or 2).
      * @param nickName The new nickname for the player.
      */
-    fun onNickNameChange(player: Int, nickName: String) {
-        if (player == 1) {
+    fun onNickNameChange(playerId: Int, nickName: String) {
+        if (playerId == 1) {
             _nickNamePlayer1.value = nickName
         }
         else {
@@ -170,16 +166,25 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
     /**
      * Initiates a new game by creating new players and dealing initial cards.
      */
-    fun newPlayers() {
-        _player1.value = Player(_nickNamePlayer1.value!!, ArrayList(), 0, false)
-        _player2.value = Player(_nickNamePlayer2.value!!, ArrayList(), 0, false)
+    fun newGame() {
+        _player1.value = Player(_nickNamePlayer1.value!!, ArrayList(), points = 0)
+        _player2.value = Player(_nickNamePlayer2.value!!, ArrayList(), points = 0)
+        resetGame()
+    }
+
+    fun resetGame(resetPlayers: Boolean = false) {
+        if (resetPlayers) {
+            _player1.value!!.cardsList.clear()
+            _player1.value!!.points = 0
+            _player2.value!!.cardsList.clear()
+            _player2.value!!.points = 0
+        }
         _standPlayer1.value = false
         _standPlayer2.value = false
         _playerShift.value = 1
         newDeckOfCards()
         requestNewCard(1)
         requestNewCard(2)
-        //_refreshPlayerCards.value = false
     }
 
     /**
@@ -231,7 +236,7 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
      * @param playerId The ID of the player (1 or 2) requesting a new card.
      */
     fun requestNewCard(playerId : Int) {
-        if (playerId == 1) {
+        if (_playerShift.value == 1) {
             _player1.value!!.cardsList.add(DeckCards.getCard())
             calcPoints(_player1.value!!)
             //Automatic stand if player 1 has more than 21 points
@@ -249,8 +254,8 @@ class BlackJackViewModel(application: Application) : AndroidViewModel(applicatio
         forceRefreshPlayersCards()
 
         if (
-            (playerId == 1 && _standPlayer2.value == false) ||
-            (playerId == 2 && _standPlayer1.value == false)
+            (_playerShift.value == 1 && _standPlayer2.value == false) ||
+            (_playerShift.value == 2 && _standPlayer1.value == false)
             )
         {
             updateShift()

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,9 +33,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //val context = LocalContext.current
-                    //highestCardViewModel.restart(context)
-
                     val navController = rememberNavController()
 
                     NavHost(
@@ -55,7 +51,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(BlackJackScreen.route) {
-                            //blackJackViewModel.newDeckOfCards(context)
                             BlackJackScreen(
                                 navController = navController,
                                 blackJackViewModel = blackJackViewModel
