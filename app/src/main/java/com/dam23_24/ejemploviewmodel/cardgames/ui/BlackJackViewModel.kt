@@ -42,7 +42,7 @@ import java.util.ArrayList
  */
 class BlackJackViewModel(application: Application) : AndroidViewModel(application) {
 // If we don't need to use the context inside, it's better to inherit from ViewModel
-//class HighestCardViewModel : ViewModel() {
+//class BlackJackViewModel : ViewModel() {
 
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext

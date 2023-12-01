@@ -36,6 +36,7 @@ fun HighestCardScreen(
     val imagenId: Int by highestCardViewModel.imageId.observeAsState(initial = 0)
     val descImagen: String by highestCardViewModel.imageDesc.observeAsState(initial = "")
 
+    //Component to handle presses of the system back button
     BackHandler {
         highestCardViewModel.restart()
         navController.popBackStack()
@@ -129,7 +130,7 @@ fun HighestCardLayout(
             }
             // Button to restart the game
             Button(
-                enabled = highestCardViewModel.getCardsTotal() < 52,
+                enabled = highestCardViewModel.btnResetDeckOfCardsEnabled(),
                 onClick = { onClickReset() }
             ) {
                 Text(text = "Reiniciar")

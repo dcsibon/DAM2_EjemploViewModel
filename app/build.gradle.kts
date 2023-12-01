@@ -70,7 +70,7 @@ dependencies {
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
-    //DCS: LiveData
+    //LiveData
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
 }

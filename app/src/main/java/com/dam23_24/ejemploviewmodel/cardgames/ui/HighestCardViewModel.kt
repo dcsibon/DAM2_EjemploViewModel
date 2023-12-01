@@ -74,6 +74,13 @@ class HighestCardViewModel(application: Application) : AndroidViewModel(applicat
     fun btnGetCardEnabled() = DeckCards.getCardsTotal() >= 1
 
     /**
+     * Checks if the "Reset" button should be enabled based on the remaining cards in the deck.
+     *
+     * @return True if the button should be enabled, false otherwise.
+     */
+    fun btnResetDeckOfCardsEnabled() = DeckCards.getCardsTotal() < 52
+
+    /**
      * Gets the total number of cards remaining in the deck.
      *
      * @return The total number of cards remaining in the deck.
